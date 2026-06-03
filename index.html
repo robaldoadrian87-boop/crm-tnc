@@ -123,7 +123,6 @@ tbody tr:hover{background:#fafcfb}
 .bss.red{color:#A32D2D;border-color:#F09595}
 .bss.red:hover{background:#FCEBEB}
 .sh{display:none}
-/* MODAL — position fixed, funciona perfecto fuera del iframe */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
 .modal-overlay.open{display:flex}
 .modal{background:#fff;border-radius:12px;width:min(500px,100%);border:1px solid #e0e7ef;overflow:hidden;margin:auto}
@@ -144,7 +143,6 @@ tbody tr:hover{background:#fafcfb}
 .bdm:hover{background:#FCEBEB}
 .bsv{padding:6px 14px;background:#0F6E56;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
 .bsv:hover{background:#085041}
-/* PIN */
 .pin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center}
 .pin-overlay.open{display:flex}
 .pin-box{background:#fff;border-radius:16px;padding:28px 24px;width:270px;text-align:center}
@@ -163,7 +161,6 @@ tbody tr:hover{background:#fafcfb}
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <div class="brand">
     <div class="brand-logo"><img src="https://i.postimg.cc/Dzb2vjk1/Logo-Tu-Negocio-Claro-512.png" alt="TNC"></div>
@@ -182,13 +179,11 @@ tbody tr:hover{background:#fafcfb}
     <div class="udd" id="udd"></div>
   </div>
 </div>
-
 <div class="nav-tabs">
   <div class="nav-tab on" data-s="prosp" onclick="setSection(this)">📋 Prospectos</div>
   <div class="nav-tab" data-s="comm" onclick="setSection(this)">💰 Comisiones</div>
   <div class="nav-tab sh" id="tab-admin" data-s="admin" onclick="setSection(this)">⚙️ Admin</div>
 </div>
-
 <div class="content">
   <div id="s-prosp">
     <div class="kpi-row" id="kpi-row"></div>
@@ -213,18 +208,16 @@ tbody tr:hover{background:#fafcfb}
       <div id="table-area"><div class="loading">⏳ Conectando con Google Sheets...</div></div>
     </div>
   </div>
-
   <div id="s-comm" class="sh">
     <div class="panel"><div class="panel-header"><div class="panel-title">💰 Comisiones del mes</div><div id="mes-label" style="font-size:12px;color:#7a8898"></div></div><div class="comm-grid" id="comm-grid"></div></div>
     <div class="panel"><div class="panel-header"><div class="panel-title">📊 Ventas por rubro</div></div><div class="chart-s"><div class="bar-chart" id="bar-chart"></div></div></div>
   </div>
-
   <div id="s-admin" class="sh">
     <div class="panel">
       <div class="panel-header"><div class="panel-title">⚙️ Vendedoras</div><button class="btn-add" onclick="openVModal(null)">+ Agregar</button></div>
       <div class="adm-s"><div class="vl" id="vlist"></div></div>
     </div>
-    <div class="panel"><div class="panel-header"><div class="panel-title">💲 Estructura de comisiones</div></div>
+    <div class="panel"><div class="panel-header"><div class="panel-title">💲 Comisiones</div></div>
       <div style="padding:14px">
         <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0f3f7;font-size:13px"><span style="color:#7a8898;font-size:12px">Por cada cliente pagado</span><span style="font-weight:700;color:#0F6E56">$45.000 ARS</span></div>
         <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0f3f7;font-size:13px"><span style="color:#7a8898;font-size:12px">Bono 20 ventas</span><span style="font-weight:700;color:#185FA5">$1.000.000 ARS</span></div>
@@ -235,8 +228,6 @@ tbody tr:hover{background:#fafcfb}
     </div>
   </div>
 </div>
-
-<!-- Modal prospecto -->
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="mth"><h3 id="mtitle">Nuevo prospecto</h3><button class="mclose" onclick="closeModal()">✕</button></div>
@@ -250,8 +241,6 @@ tbody tr:hover{background:#fafcfb}
     <div class="mfoot" id="mfooter"></div>
   </div>
 </div>
-
-<!-- Modal vendedora -->
 <div class="modal-overlay" id="vmodal-overlay" onclick="if(event.target===this)closeVModal()">
   <div class="modal" style="max-width:380px">
     <div class="mth"><h3 id="vmtitle">Nueva vendedora</h3><button class="mclose" onclick="closeVModal()">✕</button></div>
@@ -265,8 +254,6 @@ tbody tr:hover{background:#fafcfb}
     <div class="mfoot" id="vmfooter"></div>
   </div>
 </div>
-
-<!-- PIN -->
 <div class="pin-overlay" id="pin-overlay" onclick="if(event.target===this)closePIN()">
   <div class="pin-box">
     <div class="pin-title">🔐 Acceso Admin</div>
@@ -282,64 +269,63 @@ tbody tr:hover{background:#fafcfb}
     <div class="pin-cancel" onclick="closePIN()">Cancelar</div>
   </div>
 </div>
-
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbwfajbwk-L-SDrGEhTIziruygHhDI4E5zuHb93GBRzWM-7l8TEQBEHlCRKT_AZ2-4rZrw/exec';
-const PIN = '1234';
-const DEFAULT_VENDORS = [
-  {id:'v1',name:'Adrián',color:'#0F6E56',role:'admin'},
-  {id:'v2',name:'Mayra',color:'#993556',role:'vendedora'},
-  {id:'v3',name:'Gioconda',color:'#185FA5',role:'vendedora'}
-];
-let data=[], vendors=[...DEFAULT_VENDORS], tab='Todos', editId=null, editVId=null, cur=null, usdRate=null, sec='prosp';
-let pinBuf='', pinTargetId=null;
-const COMM=45000, BONUSES=[{at:20,amount:1000000},{at:40,amount:2000000},{at:60,amount:3000000}];
+const API='https://script.google.com/macros/s/AKfycbwbqP3TlR59FO-A3ODpT5KKhrerVXXk9v-1bbWNQrrtwklTAFVeGU8XTR0gGzkgjVkxyQ/exec';
+const PIN='1234';
+const DEFAULT_VENDORS=[{id:'v1',name:'Adrián',color:'#0F6E56',role:'admin'},{id:'v2',name:'Mayra',color:'#993556',role:'vendedora'},{id:'v3',name:'Gioconda',color:'#185FA5',role:'vendedora'}];
+let data=[],vendors=[...DEFAULT_VENDORS],tab='Todos',editId=null,editVId=null,cur=null,usdRate=null,sec='prosp';
+let pinBuf='',pinTargetId=null;
+const COMM=45000,BONUSES=[{at:20,amount:1000000},{at:40,amount:2000000},{at:60,amount:3000000}];
 const BC={Nuevo:'b-n',Contactado:'b-c',Interesado:'b-i',Negociación:'b-neg',Aprobado:'b-a',Pagado:'b-p',Descartado:'b-d'};
 const DC={Nuevo:'#378ADD',Contactado:'#7F77DD',Interesado:'#EF9F27',Negociación:'#639922',Aprobado:'#1D9E75',Pagado:'#fff',Descartado:'#888780'};
 
-function loadVendors(){ try{ const v=localStorage.getItem('tnc_vendors_v3'); if(v) vendors=JSON.parse(v); }catch{} }
-function saveVendorsLocal(){ try{ localStorage.setItem('tnc_vendors_v3',JSON.stringify(vendors)); }catch{} }
+function loadVendors(){try{const v=localStorage.getItem('tnc_v4');if(v)vendors=JSON.parse(v);}catch{}}
+function saveVendorsLocal(){try{localStorage.setItem('tnc_v4',JSON.stringify(vendors));}catch{}}
+
+function apiCall(params){
+  return new Promise((resolve,reject)=>{
+    const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const url=API+'?callback='+cb+'&'+Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')+'&nocache='+Date.now();
+    const script=document.createElement('script');
+    const timeout=setTimeout(()=>{cleanup();reject(new Error('Timeout'));},15000);
+    function cleanup(){delete window[cb];if(script.parentNode)script.parentNode.removeChild(script);clearTimeout(timeout);}
+    window[cb]=function(data){cleanup();resolve(data);};
+    script.onerror=()=>{cleanup();reject(new Error('Error de conexión'));};
+    document.head.appendChild(script);
+    script.src=url;
+  });
+}
 
 async function loadData(showMsg=false){
-  if(showMsg) document.getElementById('sync-lbl').textContent='...';
+  if(showMsg)document.getElementById('sync-lbl').textContent='...';
   try{
-    const r = await fetch(API+'?nocache='+Date.now());
-    const j = await r.json();
-    if(j.ok){
-      data=j.data||[];
-      document.getElementById('sync-lbl').textContent='Sincronizar';
-      renderTable(); renderKPI(); renderAlert(); renderComm();
-    } else { showErr('Error: '+JSON.stringify(j)); }
-  }catch(e){
-    document.getElementById('sync-lbl').textContent='Reintentar';
-    showErr('No se pudo conectar con Google Sheets.<br><small>'+e.message+'</small>');
-  }
+    const j=await apiCall({action:'read'});
+    if(j.ok){data=j.data||[];document.getElementById('sync-lbl').textContent='Sincronizar';renderTable();renderKPI();renderAlert();renderComm();}
+    else showErr('Error: '+JSON.stringify(j));
+  }catch(e){document.getElementById('sync-lbl').textContent='Reintentar';showErr('No se pudo conectar.<br><small>'+e.message+'</small>');}
 }
 
-function showErr(msg){ document.getElementById('table-area').innerHTML=`<div class="err-box">⚠️ ${msg}</div>`; }
-
-async function apiPost(payload){
+async function apiSave(payload){
   document.getElementById('sync-lbl').textContent='Guardando...';
   try{
-    await fetch(API, {method:'POST', body:JSON.stringify(payload), headers:{'Content-Type':'application/json'}});
+    if(payload.action==='save'){await apiCall({action:'save',row:JSON.stringify(payload.row)});}
+    else if(payload.action==='delete'){await apiCall({action:'delete',id:String(payload.id)});}
     await loadData();
-  }catch(e){ alert('Error al guardar: '+e.message); document.getElementById('sync-lbl').textContent='Sincronizar'; }
+  }catch(e){alert('Error: '+e.message);document.getElementById('sync-lbl').textContent='Sincronizar';}
 }
 
+function showErr(msg){document.getElementById('table-area').innerHTML=`<div class="err-box">⚠️ ${msg}</div>`;}
+
 async function fetchUSD(){
-  const el=document.getElementById('usd-label'), dot=document.querySelector('.usd-dot');
-  try{
-    const r=await fetch('https://dolarapi.com/v1/dolares/oficial');
-    const j=await r.json();
-    if(j&&j.venta){ usdRate=j.venta; el.textContent=`Oficial BCRA $${j.venta.toFixed(2)}`; dot.style.background='#4ade80'; }
-    else throw 0;
-  }catch{ usdRate=null; el.textContent='Sin cotización'; dot.style.background='#f87171'; }
+  const el=document.getElementById('usd-label'),dot=document.querySelector('.usd-dot');
+  try{const r=await fetch('https://dolarapi.com/v1/dolares/oficial');const j=await r.json();if(j&&j.venta){usdRate=j.venta;el.textContent=`Oficial BCRA $${j.venta.toFixed(2)}`;dot.style.background='#4ade80';}else throw 0;}
+  catch{usdRate=null;el.textContent='Sin cotización';dot.style.background='#f87171';}
 }
 
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fARS=n=>'$'+Math.round(n).toLocaleString('es-AR');
 const fUSD=a=>usdRate?`≈ U$S ${(a/usdRate).toFixed(2)}`:'';
-const fDate=d=>{ if(!d)return'—'; const s=String(d); if(s.includes('-')){ const[y,m,day]=s.split('-'); return`${day}/${m}`; } return s.slice(0,5); };
+const fDate=d=>{if(!d)return'—';const s=String(d);if(s.includes('-')){const[y,m,day]=s.split('-');return`${day}/${m}`;}return s.slice(0,5);};
 const isAdmin=()=>cur&&cur.role==='admin';
 const canEdit=p=>isAdmin()||p.vend===cur?.name;
 const canDel=p=>isAdmin()||p.vend===cur?.name;
@@ -347,201 +333,61 @@ const canDel=p=>isAdmin()||p.vend===cur?.name;
 function toggleDD(e){
   e.stopPropagation();
   const dd=document.getElementById('udd');
-  if(dd.classList.contains('open')){ dd.classList.remove('open'); return; }
-  dd.innerHTML=vendors.map(v=>`<div class="udd-item" onclick="selUser(event,'${v.id}')">
-    <div class="uav" style="background:${v.color}">${v.name.slice(0,2).toUpperCase()}</div>
-    <div><div style="font-size:13px;font-weight:${cur.id===v.id?700:400}">${esc(v.name)}</div>
-    <div style="font-size:10px;color:#aab4bf">${v.role==='admin'?'🔐 Admin':'Vendedora'}</div></div>
-    ${cur.id===v.id?'<span style="color:#0F6E56;margin-left:auto">✓</span>':''}
-  </div>`).join('');
+  if(dd.classList.contains('open')){dd.classList.remove('open');return;}
+  dd.innerHTML=vendors.map(v=>`<div class="udd-item" onclick="selUser(event,'${v.id}')"><div class="uav" style="background:${v.color}">${v.name.slice(0,2).toUpperCase()}</div><div><div style="font-size:13px;font-weight:${cur.id===v.id?700:400}">${esc(v.name)}</div><div style="font-size:10px;color:#aab4bf">${v.role==='admin'?'🔐 Admin':'Vendedora'}</div></div>${cur.id===v.id?'<span style="color:#0F6E56;margin-left:auto">✓</span>':''}</div>`).join('');
   dd.classList.add('open');
 }
 function selUser(e,id){
-  e.stopPropagation();
-  document.getElementById('udd').classList.remove('open');
-  const v=vendors.find(x=>x.id===id); if(!v) return;
-  if(v.role==='admin'&&cur.role!=='admin'){ pinTargetId=id; openPIN(); }
-  else applyUser(v);
+  e.stopPropagation();document.getElementById('udd').classList.remove('open');
+  const v=vendors.find(x=>x.id===id);if(!v)return;
+  if(v.role==='admin'&&cur.role!=='admin'){pinTargetId=id;openPIN();}else applyUser(v);
 }
-document.addEventListener('click',function(e){
-  if(!e.target.closest('#upill')&&!e.target.closest('#udd')) document.getElementById('udd').classList.remove('open');
-});
-function applyUser(v){
-  cur=v; applyUI(v);
-  const at=document.getElementById('tab-admin');
-  if(isAdmin()) at.classList.remove('sh');
-  else{ at.classList.add('sh'); if(sec==='admin') setSection(document.querySelector('[data-s="prosp"]')); }
-  renderAll();
-}
-function applyUI(v){
-  document.getElementById('top-av').textContent=v.name.slice(0,2).toUpperCase();
-  document.getElementById('top-av').style.background=v.color;
-  document.getElementById('top-name').textContent=v.name;
-  document.getElementById('top-role').textContent=v.role==='admin'?'Admin':'Vendedora';
-}
-function openPIN(){ pinBuf=''; document.getElementById('perr').textContent=''; updPIN(); document.getElementById('pin-overlay').classList.add('open'); }
-function closePIN(){ document.getElementById('pin-overlay').classList.remove('open'); pinBuf=''; pinTargetId=null; }
-function updPIN(){ for(let i=0;i<4;i++){ const d=document.getElementById('pd'+i); if(d) d.classList.toggle('filled',i<pinBuf.length); } }
+document.addEventListener('click',function(e){if(!e.target.closest('#upill')&&!e.target.closest('#udd'))document.getElementById('udd').classList.remove('open');});
+function applyUser(v){cur=v;applyUI(v);const at=document.getElementById('tab-admin');if(isAdmin())at.classList.remove('sh');else{at.classList.add('sh');if(sec==='admin')setSection(document.querySelector('[data-s="prosp"]'));}renderAll();}
+function applyUI(v){document.getElementById('top-av').textContent=v.name.slice(0,2).toUpperCase();document.getElementById('top-av').style.background=v.color;document.getElementById('top-name').textContent=v.name;document.getElementById('top-role').textContent=v.role==='admin'?'Admin':'Vendedora';}
+function openPIN(){pinBuf='';document.getElementById('perr').textContent='';updPIN();document.getElementById('pin-overlay').classList.add('open');}
+function closePIN(){document.getElementById('pin-overlay').classList.remove('open');pinBuf='';pinTargetId=null;}
+function updPIN(){for(let i=0;i<4;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('filled',i<pinBuf.length);}}
 function pk(k){
-  if(k==='del'){ pinBuf=pinBuf.slice(0,-1); updPIN(); return; }
-  if(pinBuf.length>=4) return;
-  pinBuf+=k; updPIN();
-  if(pinBuf.length===4){
-    if(pinBuf===PIN){ const t=vendors.find(x=>x.id===pinTargetId); closePIN(); if(t) applyUser(t); }
-    else{ document.getElementById('perr').textContent='PIN incorrecto.'; pinBuf=''; updPIN(); }
-  }
+  if(k==='del'){pinBuf=pinBuf.slice(0,-1);updPIN();return;}
+  if(pinBuf.length>=4)return;
+  pinBuf+=k;updPIN();
+  if(pinBuf.length===4){if(pinBuf===PIN){const t=vendors.find(x=>x.id===pinTargetId);closePIN();if(t)applyUser(t);}else{document.getElementById('perr').textContent='PIN incorrecto.';pinBuf='';updPIN();}}
 }
-function setSection(el){
-  sec=el.dataset.s;
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('on',t.dataset.s===sec));
-  ['prosp','comm','admin'].forEach(s=>document.getElementById('s-'+s).classList.toggle('sh',s!==sec));
-  if(sec==='comm') renderComm();
-  if(sec==='admin') renderAdmin();
-}
-function setTab(btn){ tab=btn.dataset.tab; document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); renderTable(); }
-function renderAll(){ renderVTabs(); renderTable(); renderKPI(); renderAlert(); renderComm(); renderAdmin(); const mv=document.getElementById('m-vend'); if(mv) mv.innerHTML=vendors.map(v=>`<option value="${esc(v.name)}">${esc(v.name)}</option>`).join(''); }
-function renderVTabs(){ document.getElementById('vtabs').innerHTML=vendors.map(v=>`<button class="tab" data-tab="${esc(v.name)}" onclick="setTab(this)">${esc(v.name)}</button>`).join(''); }
-function filtered(){
-  const q=(document.getElementById('q').value||'').toLowerCase();
-  const est=document.getElementById('fest').value;
-  return data.filter(p=>(tab==='Todos'||p.vend===tab)&&(!q||[p.local,p.rubro,p.ig,p.canal,p.notas].some(x=>(x||'').toLowerCase().includes(q)))&&(!est||p.estado===est));
-}
-function getActions(p){
-  const b=[];
-  if(canEdit(p)) b.push(`<button class="ib" onclick="openModal('${p.id}')">✏️ Editar</button>`);
-  if(p.estado==='Negociación'&&isAdmin()) b.push(`<button class="ib approve" onclick="chEst('${p.id}','Aprobado')">✅ Aprobar</button>`);
-  if(p.estado==='Aprobado'&&isAdmin()) b.push(`<button class="ib pay" onclick="chEst('${p.id}','Pagado')">💲 Pagado</button>`);
-  if(canDel(p)) b.push(`<button class="ib del" onclick="delRow('${p.id}')">🗑️</button>`);
-  return b.join('');
-}
-async function chEst(id,est){
-  const p=data.find(x=>x.id==id); if(!p) return;
-  await apiPost({action:'save',row:{...p,estado:est,fecha:new Date().toISOString().slice(0,10)}});
-}
-async function delRow(id){
-  const p=data.find(x=>x.id==id); if(!p||!canDel(p)) return;
-  if(!confirm('¿Eliminar este prospecto?')) return;
-  await apiPost({action:'delete',id:String(id)});
-}
+function setSection(el){sec=el.dataset.s;document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('on',t.dataset.s===sec));['prosp','comm','admin'].forEach(s=>document.getElementById('s-'+s).classList.toggle('sh',s!==sec));if(sec==='comm')renderComm();if(sec==='admin')renderAdmin();}
+function setTab(btn){tab=btn.dataset.tab;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderTable();}
+function renderAll(){renderVTabs();renderTable();renderKPI();renderAlert();renderComm();renderAdmin();const mv=document.getElementById('m-vend');if(mv)mv.innerHTML=vendors.map(v=>`<option value="${esc(v.name)}">${esc(v.name)}</option>`).join('');}
+function renderVTabs(){document.getElementById('vtabs').innerHTML=vendors.map(v=>`<button class="tab" data-tab="${esc(v.name)}" onclick="setTab(this)">${esc(v.name)}</button>`).join('');}
+function filtered(){const q=(document.getElementById('q').value||'').toLowerCase();const est=document.getElementById('fest').value;return data.filter(p=>(tab==='Todos'||p.vend===tab)&&(!q||[p.local,p.rubro,p.ig,p.canal,p.notas].some(x=>(x||'').toLowerCase().includes(q)))&&(!est||p.estado===est));}
+function getActions(p){const b=[];if(canEdit(p))b.push(`<button class="ib" onclick="openModal('${p.id}')">✏️ Editar</button>`);if(p.estado==='Negociación'&&isAdmin())b.push(`<button class="ib approve" onclick="chEst('${p.id}','Aprobado')">✅ Aprobar</button>`);if(p.estado==='Aprobado'&&isAdmin())b.push(`<button class="ib pay" onclick="chEst('${p.id}','Pagado')">💲 Pagado</button>`);if(canDel(p))b.push(`<button class="ib del" onclick="delRow('${p.id}')">🗑️</button>`);return b.join('');}
+async function chEst(id,est){const p=data.find(x=>x.id==id);if(!p)return;await apiSave({action:'save',row:{...p,estado:est,fecha:new Date().toISOString().slice(0,10)}});}
+async function delRow(id){const p=data.find(x=>x.id==id);if(!p||!canDel(p))return;if(!confirm('¿Eliminar?'))return;await apiSave({action:'delete',id:String(id)});}
 function renderTable(){
-  const list=filtered(), area=document.getElementById('table-area');
-  if(!list.length){ area.innerHTML=`<div class="empty-s"><div>📋</div>Sin prospectos — ¡agregá el primero!</div>`; return; }
-  area.innerHTML=`<div style="overflow-x:auto"><table><thead><tr>
-    <th>Local / Rubro</th><th>Instagram</th><th>Canal</th><th>Estado</th><th>Vendedora</th><th>Contacto</th><th>Notas</th><th></th>
-  </tr></thead><tbody>${list.map(p=>{
-    const v=vendors.find(x=>x.name===p.vend),bg=v?v.color:'#888';
-    return`<tr>
-      <td><div class="ln">${esc(p.local)}</div><div class="lr">${esc(p.rubro)}</div></td>
-      <td>${p.ig?`<span class="ig">${esc(p.ig)}</span>`:`<span class="muted">—</span>`}</td>
-      <td><span class="muted">${esc(p.canal)}</span></td>
-      <td><span class="badge ${BC[p.estado]||''}"><span class="dot" style="background:${DC[p.estado]||'#888'}"></span>${p.estado}</span></td>
-      <td style="white-space:nowrap"><span class="av" style="background:${bg}">${(p.vend||'?').slice(0,2).toUpperCase()}</span><span class="vn">${esc(p.vend)}</span></td>
-      <td><span class="muted">${fDate(p.fecha)}</span></td>
-      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#7a8898;font-size:12px" title="${esc(p.notas||'')}">${p.notas?esc(p.notas):`<span class="muted">—</span>`}</td>
-      <td><div class="ar">${getActions(p)}</div></td>
-    </tr>`;
-  }).join('')}</tbody></table></div>`;
+  const list=filtered(),area=document.getElementById('table-area');
+  if(!list.length){area.innerHTML=`<div class="empty-s"><div>📋</div>Sin prospectos — ¡agregá el primero!</div>`;return;}
+  area.innerHTML=`<div style="overflow-x:auto"><table><thead><tr><th>Local / Rubro</th><th>Instagram</th><th>Canal</th><th>Estado</th><th>Vendedora</th><th>Contacto</th><th>Notas</th><th></th></tr></thead><tbody>${list.map(p=>{const v=vendors.find(x=>x.name===p.vend),bg=v?v.color:'#888';return`<tr><td><div class="ln">${esc(p.local)}</div><div class="lr">${esc(p.rubro)}</div></td><td>${p.ig?`<span class="ig">${esc(p.ig)}</span>`:`<span class="muted">—</span>`}</td><td><span class="muted">${esc(p.canal)}</span></td><td><span class="badge ${BC[p.estado]||''}"><span class="dot" style="background:${DC[p.estado]||'#888'}"></span>${p.estado}</span></td><td style="white-space:nowrap"><span class="av" style="background:${bg}">${(p.vend||'?').slice(0,2).toUpperCase()}</span><span class="vn">${esc(p.vend)}</span></td><td><span class="muted">${fDate(p.fecha)}</span></td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#7a8898;font-size:12px" title="${esc(p.notas||'')}">${p.notas?esc(p.notas):`<span class="muted">—</span>`}</td><td><div class="ar">${getActions(p)}</div></td></tr>`;}).join('')}</tbody></table></div>`;
 }
-function renderKPI(){
-  const tot=data.length,neg=data.filter(p=>p.estado==='Negociación').length,pag=data.filter(p=>p.estado==='Pagado').length,apr=data.filter(p=>p.estado==='Aprobado').length;
-  document.getElementById('kpi-row').innerHTML=`
-    <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${tot}</div><div class="kpi-sub">prospectos</div></div>
-    <div class="kpi"><div class="kpi-label">Negociación</div><div class="kpi-val amber">${neg}</div><div class="kpi-sub">pendientes</div></div>
-    <div class="kpi"><div class="kpi-label">Aprobados</div><div class="kpi-val blue">${apr}</div><div class="kpi-sub">esperando pago</div></div>
-    <div class="kpi"><div class="kpi-label">Pagados</div><div class="kpi-val green">${pag}</div><div class="kpi-sub">clientes activos</div></div>`;
-}
-function renderAlert(){
-  const neg=data.filter(p=>p.estado==='Negociación'),box=document.getElementById('alert-box');
-  if(neg.length&&isAdmin()){ box.classList.add('show'); document.getElementById('alert-list').innerHTML=neg.map(p=>`<div>• <strong>${esc(p.local)}</strong> — ${esc(p.vend)} — ${p.notas||'sin notas'}</div>`).join(''); }
-  else box.classList.remove('show');
-}
+function renderKPI(){const tot=data.length,neg=data.filter(p=>p.estado==='Negociación').length,pag=data.filter(p=>p.estado==='Pagado').length,apr=data.filter(p=>p.estado==='Aprobado').length;document.getElementById('kpi-row').innerHTML=`<div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${tot}</div><div class="kpi-sub">prospectos</div></div><div class="kpi"><div class="kpi-label">Negociación</div><div class="kpi-val amber">${neg}</div><div class="kpi-sub">pendientes</div></div><div class="kpi"><div class="kpi-label">Aprobados</div><div class="kpi-val blue">${apr}</div><div class="kpi-sub">esperando pago</div></div><div class="kpi"><div class="kpi-label">Pagados</div><div class="kpi-val green">${pag}</div><div class="kpi-sub">clientes activos</div></div>`;}
+function renderAlert(){const neg=data.filter(p=>p.estado==='Negociación'),box=document.getElementById('alert-box');if(neg.length&&isAdmin()){box.classList.add('show');document.getElementById('alert-list').innerHTML=neg.map(p=>`<div>• <strong>${esc(p.local)}</strong> — ${esc(p.vend)} — ${p.notas||'sin notas'}</div>`).join('');}else box.classList.remove('show');}
 function renderComm(){
   const vends=vendors.filter(v=>v.role==='vendedora');
   document.getElementById('mes-label').textContent=new Date().toLocaleDateString('es-AR',{month:'long',year:'numeric'});
-  document.getElementById('comm-grid').innerHTML=vends.map(v=>{
-    const ventas=data.filter(p=>p.vend===v.name&&p.estado==='Pagado').length;
-    const base=ventas*COMM; let bE=0;
-    const bR=BONUSES.map(b=>{ const e=ventas>=b.at; if(e) bE+=b.amount; return`<div class="br-row ${e?'earned':'pend'}"><span>${e?'✅':'⬜'} Bono ${b.at} — ${fARS(b.amount)}</span><span>${e?'✓':'pendiente'}</span></div>`; }).join('');
-    const total=base+bE,nb=BONUSES.find(b=>ventas<b.at),pct=nb?Math.min(100,Math.round(ventas/nb.at*100)):100;
-    return`<div class="cc">
-      <div class="cn"><span class="av" style="background:${v.color};margin-right:0">${v.name.slice(0,2).toUpperCase()}</span>${esc(v.name)}</div>
-      <div class="cr"><span class="cl">Ventas pagadas</span><span style="font-weight:700;font-size:15px">${ventas}</span></div>
-      <div class="cr"><span class="cl">Comisión base</span><span class="cv">${fARS(base)}</span></div>
-      <div class="cr"><span class="cl">Bonos ganados</span><span class="cv bonus">${fARS(bE)}</span></div>
-      <div class="cr" style="border-bottom:none"><span class="cl">Total</span><span style="font-weight:700;font-size:15px;color:#0F6E56">${fARS(total)}</span></div>
-      <div style="font-size:11px;color:#aab4bf;text-align:right;margin-top:2px">${fUSD(total)}</div>
-      ${nb?`<div class="pw"><div class="pl"><span>Próximo bono: ${nb.at} ventas</span><span>${ventas}/${nb.at}</span></div><div class="pb"><div class="pf" style="width:${pct}%"></div></div></div>`:'<div style="font-size:11px;color:#0F6E56;font-weight:600;margin-top:6px">🏆 ¡Todos los bonos ganados!</div>'}
-      <div class="br-rows">${bR}</div>
-    </div>`;
-  }).join('');
+  document.getElementById('comm-grid').innerHTML=vends.map(v=>{const ventas=data.filter(p=>p.vend===v.name&&p.estado==='Pagado').length;const base=ventas*COMM;let bE=0;const bR=BONUSES.map(b=>{const e=ventas>=b.at;if(e)bE+=b.amount;return`<div class="br-row ${e?'earned':'pend'}"><span>${e?'✅':'⬜'} Bono ${b.at} — ${fARS(b.amount)}</span><span>${e?'✓':'pendiente'}</span></div>`;}).join('');const total=base+bE,nb=BONUSES.find(b=>ventas<b.at),pct=nb?Math.min(100,Math.round(ventas/nb.at*100)):100;return`<div class="cc"><div class="cn"><span class="av" style="background:${v.color};margin-right:0">${v.name.slice(0,2).toUpperCase()}</span>${esc(v.name)}</div><div class="cr"><span class="cl">Ventas pagadas</span><span style="font-weight:700;font-size:15px">${ventas}</span></div><div class="cr"><span class="cl">Comisión base</span><span class="cv">${fARS(base)}</span></div><div class="cr"><span class="cl">Bonos ganados</span><span class="cv bonus">${fARS(bE)}</span></div><div class="cr" style="border-bottom:none"><span class="cl">Total</span><span style="font-weight:700;font-size:15px;color:#0F6E56">${fARS(total)}</span></div><div style="font-size:11px;color:#aab4bf;text-align:right;margin-top:2px">${fUSD(total)}</div>${nb?`<div class="pw"><div class="pl"><span>Próximo bono: ${nb.at} ventas</span><span>${ventas}/${nb.at}</span></div><div class="pb"><div class="pf" style="width:${pct}%"></div></div></div>`:'<div style="font-size:11px;color:#0F6E56;font-weight:600;margin-top:6px">🏆 ¡Todos los bonos ganados!</div>'}<div class="br-rows">${bR}</div></div>`;}).join('');
   renderBar();
 }
-function renderBar(){
-  const rub={};data.filter(p=>p.estado==='Pagado').forEach(p=>{rub[p.rubro]=(rub[p.rubro]||0)+1;});
-  const keys=Object.keys(rub),bc=document.getElementById('bar-chart');
-  if(!keys.length){ bc.innerHTML='<div style="color:#aab4bf;font-size:13px;padding:16px">Sin ventas pagadas aún</div>'; return; }
-  const max=Math.max(...Object.values(rub)),cols=['#0F6E56','#185FA5','#854F0B','#993556','#3C3489'];
-  bc.innerHTML=keys.map((k,i)=>`<div class="barcol"><div class="bv">${rub[k]}</div><div class="bar" style="height:${Math.round(rub[k]/max*100)}%;background:${cols[i%cols.length]}"></div><div class="bl">${esc(k)}</div></div>`).join('');
-}
-function renderAdmin(){
-  if(!isAdmin()) return;
-  document.getElementById('vlist').innerHTML=vendors.map(v=>`
-    <div class="vrow"><div class="av" style="background:${v.color};width:34px;height:34px;font-size:13px">${v.name.slice(0,2).toUpperCase()}</div>
-    <div class="vi"><div class="vnm">${esc(v.name)}</div><span class="rb ${v.role==='admin'?'ra':'rv'}">${v.role==='admin'?'Admin':'Vendedora'}</span></div>
-    <div style="display:flex;gap:5px"><button class="bss" onclick="openVModal('${v.id}')">✏️</button>${v.role!=='admin'?`<button class="bss red" onclick="delV('${v.id}')">🗑️</button>`:''}</div></div>`).join('');
-}
-function openModal(id){
-  editId=id; const p=id?data.find(x=>x.id==id):null; if(id&&!canEdit(p)) return;
-  document.getElementById('mtitle').textContent=id?'Editar prospecto':'Nuevo prospecto';
-  document.getElementById('m-local').value=p?.local||'';
-  document.getElementById('m-rubro').value=p?.rubro||'';
-  document.getElementById('m-ig').value=p?.ig||'';
-  document.getElementById('m-canal').value=p?.canal||'Instagram DM';
-  const me=document.getElementById('m-estado'); me.value=p?.estado||'Nuevo';
-  Array.from(me.options).forEach(o=>o.disabled=!isAdmin()&&['Aprobado','Pagado'].includes(o.value));
-  const mv=document.getElementById('m-vend'); mv.innerHTML=vendors.map(v=>`<option value="${esc(v.name)}" ${p?.vend===v.name?'selected':''}>${esc(v.name)}</option>`).join('');
-  if(!p) mv.value=cur.name;
-  document.getElementById('m-fecha').value=p?.fecha||new Date().toISOString().slice(0,10);
-  document.getElementById('m-notas').value=p?.notas||'';
-  document.getElementById('mfooter').innerHTML=`
-    <button class="bcn" onclick="closeModal()">Cancelar</button>
-    ${id&&canDel(p)?`<button class="bdm" onclick="delRow('${id}');closeModal()">🗑️ Eliminar</button>`:''}
-    <button class="bsv" onclick="saveRow()">Guardar</button>`;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
-async function saveRow(){
-  const local=document.getElementById('m-local').value.trim(),rubro=document.getElementById('m-rubro').value.trim();
-  if(!local||!rubro){ alert('El nombre y rubro son obligatorios.'); return; }
-  const obj={id:editId||Date.now(),local,rubro,ig:document.getElementById('m-ig').value.trim(),canal:document.getElementById('m-canal').value,estado:document.getElementById('m-estado').value,vend:document.getElementById('m-vend').value,fecha:document.getElementById('m-fecha').value,notas:document.getElementById('m-notas').value.trim()};
-  closeModal();
-  await apiPost({action:'save',row:obj});
-}
-function openVModal(id){
-  editVId=id; const v=id?vendors.find(x=>x.id===id):null;
-  document.getElementById('vmtitle').textContent=id?'Editar vendedora':'Nueva vendedora';
-  document.getElementById('v-name').value=v?.name||'';
-  document.getElementById('v-color').value=v?.color||'#993556';
-  document.getElementById('v-role').value=v?.role||'vendedora';
-  document.getElementById('vmfooter').innerHTML=`
-    <button class="bcn" onclick="closeVModal()">Cancelar</button>
-    ${id&&v?.role!=='admin'?`<button class="bdm" onclick="delV('${id}');closeVModal()">🗑️</button>`:''}
-    <button class="bsv" onclick="saveVendor()">Guardar</button>`;
-  document.getElementById('vmodal-overlay').classList.add('open');
-}
-function closeVModal(){ document.getElementById('vmodal-overlay').classList.remove('open'); }
-function saveVendor(){
-  const name=document.getElementById('v-name').value.trim(); if(!name){ alert('El nombre es obligatorio.'); return; }
-  const obj={id:editVId||'v'+Date.now(),name,color:document.getElementById('v-color').value,role:document.getElementById('v-role').value};
-  if(editVId){ vendors=vendors.map(v=>v.id===editVId?obj:v); }else{ vendors.push(obj); }
-  saveVendorsLocal(); closeVModal(); renderAll();
-}
-function delV(id){ if(!confirm('¿Eliminar?')) return; vendors=vendors.filter(v=>v.id!==id); saveVendorsLocal(); renderAll(); }
+function renderBar(){const rub={};data.filter(p=>p.estado==='Pagado').forEach(p=>{rub[p.rubro]=(rub[p.rubro]||0)+1;});const keys=Object.keys(rub),bc=document.getElementById('bar-chart');if(!keys.length){bc.innerHTML='<div style="color:#aab4bf;font-size:13px;padding:16px">Sin ventas pagadas aún</div>';return;}const max=Math.max(...Object.values(rub)),cols=['#0F6E56','#185FA5','#854F0B','#993556','#3C3489'];bc.innerHTML=keys.map((k,i)=>`<div class="barcol"><div class="bv">${rub[k]}</div><div class="bar" style="height:${Math.round(rub[k]/max*100)}%;background:${cols[i%cols.length]}"></div><div class="bl">${esc(k)}</div></div>`).join('');}
+function renderAdmin(){if(!isAdmin())return;document.getElementById('vlist').innerHTML=vendors.map(v=>`<div class="vrow"><div class="av" style="background:${v.color};width:34px;height:34px;font-size:13px">${v.name.slice(0,2).toUpperCase()}</div><div class="vi"><div class="vnm">${esc(v.name)}</div><span class="rb ${v.role==='admin'?'ra':'rv'}">${v.role==='admin'?'Admin':'Vendedora'}</span></div><div style="display:flex;gap:5px"><button class="bss" onclick="openVModal('${v.id}')">✏️</button>${v.role!=='admin'?`<button class="bss red" onclick="delV('${v.id}')">🗑️</button>`:''}</div></div>`).join('');}
+function openModal(id){editId=id;const p=id?data.find(x=>x.id==id):null;if(id&&!canEdit(p))return;document.getElementById('mtitle').textContent=id?'Editar prospecto':'Nuevo prospecto';document.getElementById('m-local').value=p?.local||'';document.getElementById('m-rubro').value=p?.rubro||'';document.getElementById('m-ig').value=p?.ig||'';document.getElementById('m-canal').value=p?.canal||'Instagram DM';const me=document.getElementById('m-estado');me.value=p?.estado||'Nuevo';Array.from(me.options).forEach(o=>o.disabled=!isAdmin()&&['Aprobado','Pagado'].includes(o.value));const mv=document.getElementById('m-vend');mv.innerHTML=vendors.map(v=>`<option value="${esc(v.name)}" ${p?.vend===v.name?'selected':''}>${esc(v.name)}</option>`).join('');if(!p)mv.value=cur.name;document.getElementById('m-fecha').value=p?.fecha||new Date().toISOString().slice(0,10);document.getElementById('m-notas').value=p?.notas||'';document.getElementById('mfooter').innerHTML=`<button class="bcn" onclick="closeModal()">Cancelar</button>${id&&canDel(p)?`<button class="bdm" onclick="delRow('${id}');closeModal()">🗑️ Eliminar</button>`:''}<button class="bsv" onclick="saveRow()">Guardar</button>`;document.getElementById('modal-overlay').classList.add('open');}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+async function saveRow(){const local=document.getElementById('m-local').value.trim(),rubro=document.getElementById('m-rubro').value.trim();if(!local||!rubro){alert('El nombre y rubro son obligatorios.');return;}const obj={id:editId||Date.now(),local,rubro,ig:document.getElementById('m-ig').value.trim(),canal:document.getElementById('m-canal').value,estado:document.getElementById('m-estado').value,vend:document.getElementById('m-vend').value,fecha:document.getElementById('m-fecha').value,notas:document.getElementById('m-notas').value.trim()};closeModal();await apiSave({action:'save',row:obj});}
+function openVModal(id){editVId=id;const v=id?vendors.find(x=>x.id===id):null;document.getElementById('vmtitle').textContent=id?'Editar vendedora':'Nueva vendedora';document.getElementById('v-name').value=v?.name||'';document.getElementById('v-color').value=v?.color||'#993556';document.getElementById('v-role').value=v?.role||'vendedora';document.getElementById('vmfooter').innerHTML=`<button class="bcn" onclick="closeVModal()">Cancelar</button>${id&&v?.role!=='admin'?`<button class="bdm" onclick="delV('${id}');closeVModal()">🗑️</button>`:''}<button class="bsv" onclick="saveVendor()">Guardar</button>`;document.getElementById('vmodal-overlay').classList.add('open');}
+function closeVModal(){document.getElementById('vmodal-overlay').classList.remove('open');}
+function saveVendor(){const name=document.getElementById('v-name').value.trim();if(!name){alert('El nombre es obligatorio.');return;}const obj={id:editVId||'v'+Date.now(),name,color:document.getElementById('v-color').value,role:document.getElementById('v-role').value};if(editVId){vendors=vendors.map(v=>v.id===editVId?obj:v);}else{vendors.push(obj);}saveVendorsLocal();closeVModal();renderAll();}
+function delV(id){if(!confirm('¿Eliminar?'))return;vendors=vendors.filter(v=>v.id!==id);saveVendorsLocal();renderAll();}
 
-// Init
 loadVendors();
 cur=vendors.find(v=>v.role==='vendedora')||vendors[0];
-applyUI(cur); renderVTabs(); renderKPI(); fetchUSD(); loadData();
+applyUI(cur);renderVTabs();renderKPI();fetchUSD();loadData();
 </script>
 </body>
 </html>
